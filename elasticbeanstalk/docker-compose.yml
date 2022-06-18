@@ -1,0 +1,6 @@
+version: "3"
+services:
+  backend:
+    image: "oerrarhbi/students-app"
+    ports: [ '80:8080' ]
+    restart: always

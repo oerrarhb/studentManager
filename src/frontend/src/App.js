@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react'
 import { getAllStudents } from "./client";
-import { Layout, Menu, Breadcrumb,Table,Spin,Empty } from 'antd';
+import { Layout, Menu, Breadcrumb,Table,Spin,Empty,Button } from 'antd';
 import {
     DesktopOutlined,
     PieChartOutlined,
     FileOutlined,
     TeamOutlined,
     UserOutlined,
-    LoadingOutlined
+    LoadingOutlined,
+    PlusOutlined
 } from '@ant-design/icons';
+import StudentDrawerForm from './StudentDrawerForm';
+
+
 
 import './App.css';
 
@@ -44,6 +48,7 @@ const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 function App() {
   const [students , setStudents] = useState([]);
   const [fetching, setFetching] = useState(true);
+  const [showDrawer, setShowDrawer] = useState(false);
 
   const fetchStudents = () => getAllStudents()
   .then(res  => res.json())
@@ -74,15 +79,27 @@ function App() {
     }
     else
     {
-      return <Table 
-      dataSource={students} 
-      columns={columns}
-      bordered
-      rowKey={(student)=>student.id}
-      pagination={{ pageSize: 50 }} 
-      scroll={{ y: 240 }}
-      title={()=>'students'}
-      />;;
+      return <>
+            <StudentDrawerForm
+                showDrawer={showDrawer}
+                setShowDrawer={setShowDrawer}
+            />
+            <Table
+                dataSource={students}
+                columns={columns}
+                bordered
+                title={() =>
+                    <Button
+                        onClick={() => setShowDrawer(!showDrawer)}
+                        type="primary" shape="round" icon={<PlusOutlined/>} size="small">
+                        Add New Student
+                    </Button>
+                }
+                pagination={{pageSize: 50}}
+                scroll={{y: 500}}
+                rowKey={student => student.id}
+            />
+        </>
     }
   }
   

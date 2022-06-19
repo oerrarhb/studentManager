@@ -50,13 +50,19 @@ function App() {
   const [fetching, setFetching] = useState(true);
   const [showDrawer, setShowDrawer] = useState(false);
 
-  const fetchStudents = () => getAllStudents()
-  .then(res  => res.json())
-  .then(data =>{
-    console.log(data);
-    setStudents(data);
-    setFetching(false);
-  } );
+  const fetchStudents = () =>
+  getAllStudents()
+      .then(res => res.json())
+      .then(data => {
+          console.log(data);
+          setStudents(data);
+          
+      }).catch(err => {
+          console.log(err.response)
+          err.response.json().then(res => {
+              console.log(res);
+          });
+      }).finally(setFetching(false))
 
   const [collapsed, setCollapsed] = useState(false);
 
@@ -83,6 +89,7 @@ function App() {
             <StudentDrawerForm
                 showDrawer={showDrawer}
                 setShowDrawer={setShowDrawer}
+                fetchStudents={fetchStudents}
             />
             <Table
                 dataSource={students}

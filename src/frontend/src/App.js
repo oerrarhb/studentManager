@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getAllStudents } from "./client";
-import { Layout, Menu, Breadcrumb,Table,Spin,Empty,Button } from 'antd';
+import { Layout, Menu, Breadcrumb,Table,Spin,Empty,Button,Tag,Badge, Avatar } from 'antd';
 import {
     DesktopOutlined,
     PieChartOutlined,
@@ -19,7 +19,28 @@ import './App.css';
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
+const TheAvatar = ({name}) => 
+{
+  let nameTrim = name.trim();
+  if(nameTrim.length === 0)
+  {
+    return <Avatar icon={UserOutlined}/>
+  }
+  let nameSplit = nameTrim.split(' ');
+  if(nameSplit.length===1)
+  {
+    return <Avatar>{name.charAt(0)}</Avatar>
+  }
+  return <Avatar>{`${nameSplit[0].charAt(0)}${nameSplit[1].charAt(0)}`}</Avatar>
+}
+
 const columns = [
+  {
+    title:'',
+    dataIndex: 'avatar',
+    key:'avatar',
+    render: (text,student) => <TheAvatar name={student.name}/>
+  },
   {
     title: 'Id',
     dataIndex: 'id',
@@ -96,11 +117,17 @@ function App() {
                 columns={columns}
                 bordered
                 title={() =>
+                  <>
+                  <Tag>Number of students</Tag>
+                  <Badge count={students.length} className="site-badge-count-4"/>
+                  <br/>
+                  <br/>
                     <Button
                         onClick={() => setShowDrawer(!showDrawer)}
                         type="primary" shape="round" icon={<PlusOutlined/>} size="small">
                         Add New Student
                     </Button>
+                    </>
                 }
                 pagination={{pageSize: 50}}
                 scroll={{y: 500}}
